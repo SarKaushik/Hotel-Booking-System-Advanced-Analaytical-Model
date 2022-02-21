@@ -1,0 +1,174 @@
+---
+title: "Hotel Booking System Analytical Model"
+author: "Sarvesh Kaushik"
+date: "2/18/2022"
+output: html_document
+---
+
+###Loading Packages:
+By effective utilization of R, the Data Cleaning process was started,
+
+
+```{r}
+
+library(tidyverse)
+
+```
+
+Importing the data:
+
+```{r }
+
+hotel_bookings <- read.csv("/Users/sarveshkaushik/Downloads/booking.csv", sep = ",")
+```
+
+Analyzing the data in the bookings file,
+
+```{r }
+head(hotel_bookings)
+```
+
+Understanding different column names in the current dataset.
+
+```{r }
+colnames(hotel_bookings)
+
+```
+
+
+
+
+StakeHolder’s Statement: "I want to target people who book early, and I have a hypothesis that people with children have to book in advance."
+
+
+``{r }
+``
+
+```{r }
+ggplot(data = hotel_bookings) +
+  geom_point(mapping = aes(x = lead_time, y = children))
+
+```
+
+To visualize the Hotel Booking data we will use ggplot package as given below,
+
+install.packages('ggplot2')
+
+library(ggplot2)
+
+Stakeholder Statement: The stakeholder wants to increase weekend bookings, as the most important revenue resource for the hotel.
+
+
+This can be accomplished by knowing, what group of guests book the most weekend nights to target that group in a new marketing campaign
+
+Suggests that guests without children book most weekend nights.
+We need to verify the hypothesis presented by the Stakeholder.
+
+
+
+
+```{r }
+
+library(ggplot2)
+
+ggplot(data = hotel_bookings) +
+ geom_point(mapping = aes(x = stays_in_weekend_nights
+ , y = children))
+```
+
+
+According to the plotted data visualizations, we can see the hypothesis and estimation made by the stakeholder are correct.The guests without children have done the most weekend bookings.
+
+
+
+<h4> Stakeholder is interested in developing promotions based on different booking distributions, but first they need to know how many of the transactions are occurring for each different distribution type <h4>
+
+
+Consider the following bar chart representing transaction count for distribution channels.
+
+```{r}
+ggplot(data = hotel_bookings) +
+  geom_bar(mapping = aes(x = distribution_channel))
+
+```
+
+After exaninig the bar chart, The Stakeholder wants to know if the number of bookings for each distribution type is different depending on whether or not there was a deposit or what market segment they represent.
+```{r}
+ggplot(data = hotel_bookings) +
+  geom_bar(mapping = aes(x = distribution_channel, fill = deposit_type))
+```
+
+
+Consider the report according to the Market Segment as given below
+```{r}
+ggplot(data = hotel_bookings) +
+  geom_bar(mapping = aes(x = distribution_channel, fill = market_segment))
+```
+
+After reviewing the effective data representation stakeholder presents the following statement,
+
+Stakeholder Statement: Stakeholder wants to explore separatley deposit types and market segments to help them understand the differences more clearly.
+
+```{r}
+ggplot(data = hotel_bookings) +
+  geom_bar(mapping = aes(x = distribution_channel)) +
+  facet_wrap(~deposit_type) +
+  theme(axis.text.x = element_text(angle = 45))
+```
+
+
+```{r }
+ggplot(data = hotel_bookings) +
+  geom_bar(mapping = aes(x = distribution_channel)) +
+  facet_wrap(~market_segment) +
+  theme(axis.text.x = element_text(angle = 45))
+```
+
+
+
+```{r creating a plot}
+ggplot(data = hotel_bookings) +
+  geom_bar(mapping = aes(x = distribution_channel)) +
+  facet_wrap(~deposit_type~market_segment) +
+  theme(axis.text.x = element_text(angle = 45))
+```
+
+Stakeholder wants to run a family-friendly promotion targeting key market segments. She wants to know which market segments generate the largest number of bookings, and where these bookings are made (city hotels or resort hotels).
+
+```{r bar chart}
+ggplot(data = hotel_bookings) +
+  geom_bar(mapping = aes(x = hotel, fill = market_segment))
+```
+
+From the bar chart it's difficult to compare the size of the market segments at the top of the bars. Consider the follwing chart with modifications.
+
+```{r}
+ggplot(data = hotel_bookings) +
+  geom_bar(mapping = aes(x = hotel)) +
+  facet_wrap(~market_segment)
+```
+
+
+
+
+```{r install and download tidyverse}
+library(tidyverse)
+library(dplyr)
+```
+
+
+Stakeholder decides to send the promotion to families that make online bookings for city hotels. The online segment is the fastest growing segment, and families tend to spend more at city hotels than other types of guests.
+
+```{r filtering a dataset to just city hotels that are online TA}
+
+onlineta_city_hotels_v2 <- hotel_bookings %>% filter(hotel=="City Hotel") %>% filter(market_segment=="Online TA")
+
+head(onlineta_city_hotels_v2)
+
+```
+Stakeholder tells you that they would like you to share they visualization breaking down payment type by city because it will help inform how the company targets promotions in the future. They ask you to create a cleaned and labeled version and save it as a .png file for them to include in a presentation.
+
+
+
+
+
